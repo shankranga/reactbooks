@@ -46,6 +46,9 @@ class Books extends Component {
 			})
 			.catch((err) => console.log(err));
 	};
+	saveBook = (bookData) => {
+		API.saveBook(bookData).then((response) => console.log(response)).catch((err) => console.log(err));
+	};
 
 	render() {
 		return (
