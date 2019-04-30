@@ -21,7 +21,10 @@ class Books extends Component {
 
 	loadBooks = () => {
 		API.getBooks()
-			.then((res) => this.setState({ books: res.data, title: '', author: '', synopsis: '' }))
+			.then((res) => {
+				console.log(res);
+				this.setState({ books: res.data, title: '', author: '', synopsis: '' });
+			})
 			.catch((err) => console.log(err));
 	};
 
@@ -50,6 +53,7 @@ class Books extends Component {
 	};
 
 	render() {
+		console.log('firing');
 		return (
 			<Container fluid>
 				<Row>

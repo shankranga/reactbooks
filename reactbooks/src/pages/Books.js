@@ -21,7 +21,10 @@ class Books extends Component {
 
 	loadBooks = () => {
 		API.getBooks()
-			.then((res) => this.setState({ books: res.data, title: '', author: '', synopsis: '' }))
+			.then((res) => {
+				console.log(res);
+				this.setState({ books: res.data, title: '', author: '', synopsis: '' });
+			})
 			.catch((err) => console.log(err));
 	};
 
@@ -38,6 +41,7 @@ class Books extends Component {
 
 	handleFormSubmit = (event) => {
 		event.preventDefault();
+		console.log(this.state.title, this.state.author);
 		if (this.state.title && this.state.author) {
 			API.saveBook({
 				title: this.state.title,
@@ -50,6 +54,7 @@ class Books extends Component {
 	};
 
 	render() {
+		console.log('working');
 		return (
 			<Container fluid>
 				<Row>
