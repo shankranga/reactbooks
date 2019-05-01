@@ -31,6 +31,7 @@ class Books extends Component {
 	};
 
 	deleteBook = (id) => {
+		console.log(id);
 		API.deleteBook(id).then((res) => this.loadBooks()).catch((err) => console.log(err));
 	};
 
@@ -53,6 +54,7 @@ class Books extends Component {
 			.catch((err) => console.log(err));
 	};
 	saveBook = (bookData) => {
+		console.log(bookData);
 		API.saveBook(bookData).then((response) => console.log(response)).catch((err) => console.log(err));
 	};
 

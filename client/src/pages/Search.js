@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import { Col, Row, Container } from '../components/Grid';
 import { List, ListItem } from '../components/List';
 import { Input, TextArea, FormBtn } from '../components/Form';
+import axios from 'axios';
+import SaveBtn from '../components/SaveBtn';
 
 class Books extends Component {
 	state = {
@@ -16,19 +18,21 @@ class Books extends Component {
 	};
 
 	componentDidMount() {
-		this.loadBooks();
+		//this.loadBooks();
 	}
 
-	loadBooks = () => {
-		API.getBooks()
-			.then((res) => {
-				console.log(res);
-				this.setState({ books: res.data, title: '', author: '', synopsis: '' });
-			})
-			.catch((err) => console.log(err));
-	};
+	// loadBooks = () => {
+	// 	API.getBooks()
+	// 		.then((res) => {
+	// 			console.log(res);
+	// 			debugger
+	// 			this.setState({ books: res.data, title: '', author: '', synopsis: '' });
+	// 		})
+	// 		.catch((err) => console.log(err));
+	// };
 
 	deleteBook = (id) => {
+		console.log(id);
 		API.deleteBook(id).then((res) => this.loadBooks()).catch((err) => console.log(err));
 	};
 
@@ -40,21 +44,22 @@ class Books extends Component {
 	};
 
 	handleFormSubmit = (event) => {
+		console.log('firing');
 		event.preventDefault();
-		console.log(this.state.title, this.state.author);
-		if (this.state.title && this.state.author) {
-			API.saveBook({
-				title: this.state.title,
-				author: this.state.author,
-				synopsis: this.state.synopsis
+		return axios
+			.get('https://www.googleapis.com/books/v1/volumes?q=' + this.state.title)
+			.then((response) => {
+				console.log(response);
+				this.setState({ books: response.data.items });
 			})
-				.then((res) => this.loadBooks())
-				.catch((err) => console.log(err));
-		}
+			.catch((err) => console.log(err));
+	};
+	saveBook = (bookData) => {
+		console.log(bookData);
+		API.saveBook(bookData).then((response) => console.log(response)).catch((err) => console.log(err));
 	};
 
 	render() {
-		console.log('working');
 		return (
 			<Container fluid>
 				<Row>
@@ -96,13 +101,14 @@ class Books extends Component {
 						{this.state.books.length ? (
 							<List>
 								{this.state.books.map((book) => (
-									<ListItem key={book._id}>
-										<Link to={'/books/' + book._id}>
+									<ListItem key={book.id}>
+										<Link to={'/books/' + book.id}>
 											<strong>
-												{book.title} by {book.author}
+												{book.volumeInfo.title} by {book.volumeInfo.authors[0]}
 											</strong>
 										</Link>
-										<DeleteBtn onClick={() => this.deleteBook(book._id)} />
+										<SaveBtn onClick={() => this.saveBook(book)} />
+										<DeleteBtn onClick={() => this.deleteBook(book)} />
 									</ListItem>
 								))}
 							</List>
